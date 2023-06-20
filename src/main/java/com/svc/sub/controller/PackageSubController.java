@@ -73,11 +73,48 @@ public class PackageSubController{
         return "redirect:/login/login.do";
     }
 
-    String userId     = StringUtil.nullToStr((String) commandMap.get("USER_ID"), "");
-    String userName   = StringUtil.nullToStr((String) commandMap.get("USER_NAME"), "");
+    String userId       = StringUtil.nullToStr((String) commandMap.get("USER_ID"), "");
+    String userName     = StringUtil.nullToStr((String) commandMap.get("USER_NAME"), "");
+    String userMobileNo = StringUtil.nullToStr((String) commandMap.get("ID_MOBILE"), "");
 
-    Map<String, Object> subInfoMap = userService.selectUserSubInfo(commandMap.get());
+    Map<String, Object> subInfoMap = userService.selectUserSubInfo(commandMap.getMap());
 
+    String subCode = "SUB03";
+    commandMap.put("SUB_CODE", subCode);
+
+    Map<String, Object> saleSubMap = packageSubService.getUsePackageSubGoddsData(commandMap.getMap());
+
+    String pkgCode      = StringUtil.nullToStr((String) saleSubMap.get("PKG_CODE"), "");
+    String goodsName    = StringUtil.nullToStr((String) saleSubMap.get("GOODS_NAME"), "");
+    String amtDiscount  = StringUtil.nullToStr((String) saleSubMap.get("AMT_DISCOUNT"), "");
+    String goodsAmt     = StringUtil.nullToStr((String) saleSubMap.get("GOODS_AMT"), "");
+    
+    List<Object> memberSubList = svcCommonService.getUserSubInfoDataList(commandMap.getMap());
+
+    if(memberSubList.size() > 0){
+        model.addAttribute("subFlag", "Y");
+        model.addAtrribute("memberSubMap", memberSubList.get(0));
+    } else {
+        model.addAttribute("subFlag", "N");
+        model.addAttribute("memberSubMap", new HashMap<String, Object>());
+        model.addAttribute("subDateMap", new HashMap<String, Object>());
+    }
+
+    Map<String, Object> saleSubHistInfo = packageSubService.getUserSubHistCheckInfo(commandMap.getMap());
+
+    model.addAttribute("baseUrl",           AppConstant.getServerUrl());
+    model.addAttribute("userId",            userId);
+    model.addAttribute("userName",          userName);
+    model.addAttribute("subInfoMap",        subInfoMap);
+    model.addAttribute("subCode",           subCode);
+    model.addAttribute("pkgCode",           pkgCode);
+    model.addAttribute("amtDiscount",       amtDiscount);
+    model.addAttribute("goodsName",         goodsName);
+    model.addAttribute("goodsAmt",          goodsAmt);
+    model.addAttribute("userMobileNo",      userMobileNo);
+    model.addAttribute("saleSubHistInfo",   saleSubHistInfo);
+    
+    return "svc/sub/packageSubMain";
 
   }
 
