@@ -79,8 +79,8 @@ public class PackageSubController{
 
     Map<String, Object> subInfoMap = userService.selectUserSubInfo(commandMap.getMap());
 
-    String subCode = "SUB03";
-    commandMap.put("SUB_CODE", subCode);
+    String goodsCode = "SUB03";
+    commandMap.put("SUB_CODE", goodsCode);
 
     Map<String, Object> saleSubMap = packageSubService.getUsePackageSubGoddsData(commandMap.getMap());
 
